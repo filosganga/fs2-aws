@@ -1,0 +1,18 @@
+
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+.history
+.cache
+.lib/
+
+# User-specific stuff:
+.idea/
+.idea_modules/
+
+*.iws
+out/
+
+*.DS_Store
