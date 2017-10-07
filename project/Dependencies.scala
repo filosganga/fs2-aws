@@ -43,5 +43,10 @@ object Dependencies {
 
   val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4"
   val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.13.5"
+  val log4s = "org.log4s" %% "log4s" % "1.4.0"
+
+  object logback {
+    val classic = "ch.qos.logback" % "logback-classic" % "1.2.3"
+  }
 
 }

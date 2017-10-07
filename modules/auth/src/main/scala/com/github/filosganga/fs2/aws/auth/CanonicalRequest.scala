@@ -4,7 +4,7 @@ import java.net.URLEncoder
 
 import org.http4s.Uri.Path
 import org.http4s.util.CaseInsensitiveString
-import org.http4s.{Header, Headers, Query, Request}
+import org.http4s.{Headers, Query, Request}
 
 private[aws] case class CanonicalRequest(method: String,
                                          uri: String,
@@ -12,7 +12,8 @@ private[aws] case class CanonicalRequest(method: String,
                                          headerString: String,
                                          signedHeaders: String,
                                          hashedPayload: String) {
-  def canonicalString: String = s"$method\n$uri\n$queryString\n$headerString\n$signedHeaders\n$hashedPayload"
+  def canonicalString: String =
+    s"$method\n$uri\n$queryString\n$headerString\n$signedHeaders\n$hashedPayload"
 }
 
 private[aws] object CanonicalRequest {
@@ -28,7 +29,10 @@ private[aws] object CanonicalRequest {
   }
 
   def canonicalQueryString(query: Query): String =
-    query.sortBy(_._1).map { case (a, b) => s"${uriEncode(a)}=${uriEncode(b.getOrElse(""))}" }.mkString("&")
+    query
+      .sortBy(_._1)
+      .map { case (a, b) => s"${uriEncode(a)}=${uriEncode(b.getOrElse(""))}" }
+      .mkString("&")
 
   private def uriEncode(str: String) = URLEncoder.encode(str, "utf-8")
 
@@ -39,7 +43,7 @@ private[aws] object CanonicalRequest {
     * percent encoded path delimiters back to their decoded counterparts.
     */
   private def preprocessPath(path: Path): String =
-    uriEncode(if(path.startsWith("/")) path else "/" + path)
+    uriEncode(if (path.startsWith("/")) path else "/" + path)
       .replace(":", "%3A")
       .replace("%2F", "/")
 
@@ -47,9 +51,13 @@ private[aws] object CanonicalRequest {
 
     val multipleSpaceRegex = "\\s+".r
     val grouped = headers.groupBy(_.name)
-    val combined = grouped.mapValues(_.map(h => multipleSpaceRegex.replaceAllIn(h.value, " ").trim).mkString(","))
+    val combined = grouped.mapValues(_.map(h =>
+      multipleSpaceRegex.replaceAllIn(h.value, " ").trim).mkString(","))
 
-    combined.toSeq.sortBy(_._1).map { case (k, v) => s"${k.value.toLowerCase}:$v\n" }.mkString("")
+    combined.toSeq
+      .sortBy(_._1)
+      .map { case (k, v) => s"${k.value.toLowerCase}:$v\n" }
+      .mkString("")
   }
 
   def signedHeadersString(headers: Headers): String =

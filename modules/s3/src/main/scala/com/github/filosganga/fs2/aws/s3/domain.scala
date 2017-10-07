@@ -4,7 +4,11 @@ import java.time.ZonedDateTime
 
 case class Bucket(name: BucketName, creationDate: ZonedDateTime)
 
-case class Object(key: ObjectKey, lastModified: ZonedDateTime, size: Long, storageClass: String, etag: Etag)
+case class Object(key: ObjectKey,
+                  lastModified: ZonedDateTime,
+                  size: Long,
+                  storageClass: String,
+                  etag: Etag)
 
 case class ObjectKey(value: String) extends AnyVal
 
